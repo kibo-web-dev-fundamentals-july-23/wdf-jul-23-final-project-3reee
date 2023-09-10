@@ -87,3 +87,83 @@ class Address{
         UI.showAddressList();
     }
 }
+
+// UI class
+class UI{
+    static showAddressList(){
+        const addresses = Address.getAddresses();
+        addresses.forEach(address => UI.addToAddressList(address));
+    }
+
+    static addToAddressList(address){
+        const tableRow = document.createElement('tr');
+        tableRow.setAttribute('data-id', address.id);
+        tableRow.innerHTML = `
+            <td>${address.id}</td>
+            <td>
+                <span class = "addressing-name">${address.addrName}</span><br><span class = "address">${address.streetAddr} ${address.postCode} ${address.city} ${address.country}</span>
+            </td>
+            <td><span>${address.labels}</span></td>
+            <td>${address.firstName + " " + address.lastName}</td>
+            <td>${address.phone}</td>
+        `;
+        addrBookList.appendChild(tableRow);
+    }
+
+    static showModalData(id){
+        const addresses = Address.getAddresses();
+        addresses.forEach(address => {
+            if(address.id == id){
+                form.addr_ing_name.value = address.addrName;
+                form.first_name.value = address.firstName;
+                form.last_name.value = address.lastName;
+                form.email.value = address.email;
+                form.phone.value = address.phone;
+                form.street_addr.value = address.streetAddr;
+                form.postal_code.value = address.postCode;
+                form.city.value = address.city;
+                form.country.value = address.country;
+                form.labels.value = address.labels;
+                document.getElementById('modal-title').innerHTML = "Change Address Details";
+
+                document.getElementById('modal-btns').innerHTML = `
+                    <button type = "submit" id = "update-btn" data-id = "${id}">Update </button>
+                    <button type = "button" id = "delete-btn" data-id = "${id}">Delete </button>
+                `;
+            }
+        });
+    }
+
+    static showModal(){
+        modal.style.display = "block";
+        fullscreenDiv.style.display = "block";
+    }
+
+    static closeModal(){
+        modal.style.display = "none";
+        fullscreenDiv.style.display = "none";
+    }
+
+}
+
+// DOM Content Loaded
+window.addEventListener('DOMContentLoaded', () => {
+    loadJSON(); // loading country list from json file
+    eventListeners();
+    UI.showAddressList();
+});
+
+// event listeners
+function eventListeners(){
+    // show add item modal
+    addBtn.addEventListener('click', () => {
+        form.reset();
+        document.getElementById('modal-title').innerHTML = "Add Address";
+        UI.showModal();
+        document.getElementById('modal-btns').innerHTML = `
+            <button type = "submit" id = "save-btn"> Save </button>
+        `;
+    });
+
+    // close add item modal
+    closeBtn.addEventListener('click', UI.closeModal);

@@ -138,3 +138,58 @@ button{
         -ms-transform: translateY(1px);
             transform: translateY(1px);
 }
+#save-btn, #update-btn{
+    -webkit-box-shadow: 0 2px 0 0 #bd5305;
+            box-shadow: 0 2px 0 0 #bd5305;
+    background-color: var(--orange-color);
+    margin-right: 0.6rem;
+}
+#save-btn:hover, #update-btn:hover{
+    -webkit-box-shadow: 0 1px 0 0 #bd5305;
+            box-shadow: 0 1px 0 0 #bd5305;
+}
+#delete-btn{
+    background-color: #d33c41;
+    -webkit-box-shadow: 0 2px 0 0 #8a1f23;
+            box-shadow: 0 2px 0 0 #8a1f23;
+}
+#delete-btn:hover{
+    -webkit-box-shadow: 0 1px 0 0 #8a1f23;
+            box-shadow: 0 1px 0 0 #8a1f23;
+}
+
+/* address list */
+.addr-book{
+    padding: 1.4rem;
+    margin: 0 auto;
+    max-width: 1200px;
+    min-width: 700px!important;
+}
+.addr-book-content{
+    background-color: #fff;
+    padding: 1.6rem;
+    border-radius: 4px;
+}
+.addr-book-head{
+    padding-top: 1.5rem;
+    margin-bottom: 2rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+.addr-book-head h2{
+    font-size: 2.2rem;
+}
+.addr-book-head i{
+    color: var(--orange-color);
+    margin-right: 1rem;
+}
+.addr-book-top{
+    padding: 1rem 0;
+}
