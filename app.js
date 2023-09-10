@@ -167,3 +167,171 @@ function eventListeners(){
 
     // close add item modal
     closeBtn.addEventListener('click', UI.closeModal);
+
+    // add an address item
+    modalBtns.addEventListener('click', (event) => {
+        event.preventDefault();
+        if(event.target.id == "save-btn"){
+            let isFormValid = getFormData();
+            if(!isFormValid){
+                form.querySelectorAll('input').forEach(input => {
+                    setTimeout(() => {
+                        input.classList.remove('errorMsg');
+                    }, 1500);
+                });
+            } else {
+                let allItem = Address.getAddresses();
+                let lastItemId = (allItem.length > 0) ? allItem[allItem.length - 1].id : 0;
+                lastItemId++;
+
+                const addressItem = new Address(lastItemId, addrName, firstName, lastName, email, phone, streetAddr, postCode, city, country, labels);
+                Address.addAddress(addressItem);
+                 // Show the alert
+            alert("Address saved successfully!");
+                UI.closeModal();
+                UI.addToAddressList(addressItem);
+                form.reset();
+            }
+        }
+    });
+
+    // table row items
+    addrBookList.addEventListener('click', (event) => {
+        UI.showModal();
+        let trElement;
+        if(event.target.parentElement.tagName == "TD"){
+            trElement = event.target.parentElement.parentElement;
+        }
+
+        if(event.target.parentElement.tagName == "TR"){
+            trElement = event.target.parentElement;
+        }
+
+        let viewID = trElement.dataset.id;
+        UI.showModalData(viewID);
+    });
+
+    // delete an address item
+    modalBtns.addEventListener('click', (event) => {
+        if(event.target.id == 'delete-btn'){
+            Address.deleteAddress(event.target.dataset.id);
+        }
+    });
+
+    // update an address item
+    modalBtns.addEventListener('click', (event) => {
+        event.preventDefault();
+        if(event.target.id == "update-btn"){
+            let id = event.target.dataset.id;
+            let isFormValid = getFormData();
+            if(!isFormValid){
+                form.querySelectorAll('input').forEach(input => {
+                    setTimeout(() => {
+                        input.classList.remove('errorMsg');
+                    }, 1500);
+                });
+            } else {
+                const addressItem = new Address(id, addrName, firstName, lastName, email, phone, streetAddr, postCode, city, country, labels);
+                Address.updateAddress(addressItem);
+                alert("Updated successfully!");
+                UI.closeModal();
+                form.reset();
+            }
+        }
+    });
+}
+
+
+// load countries list
+function loadJSON(){
+    fetch('countries.json')
+    .then(response => response.json())
+    .then(data => {
+        let html = "";
+        data.forEach(country => {
+            html += `
+                <option> ${country.country} </option>
+            `;
+        });
+        countryList.innerHTML = html;
+    })
+}
+
+
+// get form data
+function getFormData(){
+    let inputValidStatus = [];
+    // console.log(form.addr_ing_name.value, form.first_name.value, form.last_name.value, form.email.value, form.phone.value, form.street_addr.value, form.postal_code.value, form.city.value, form.country.value, form.labels.value);
+
+    if(!strRegex.test(form.addr_ing_name.value) || form.addr_ing_name.value.trim().length == 0){
+        addErrMsg(form.addr_ing_name);
+        inputValidStatus[0] = false;
+    } else {
+        addrName = form.addr_ing_name.value;
+        inputValidStatus[0] = true;
+    }
+
+    if(!strRegex.test(form.first_name.value) || form.first_name.value.trim().length == 0){
+        addErrMsg(form.first_name);
+        inputValidStatus[1] = false;
+    } else {
+        firstName = form.first_name.value;
+        inputValidStatus[1] = true;
+    }
+
+    if(!strRegex.test(form.last_name.value) || form.last_name.value.trim().length == 0){
+        addErrMsg(form.last_name);
+        inputValidStatus[2] = false;
+    } else {
+        lastName = form.last_name.value;
+        inputValidStatus[2] = true;
+    }
+
+    if(!emailRegex.test(form.email.value)){
+        addErrMsg(form.email);
+        inputValidStatus[3] = false;
+    } else {
+        email = form.email.value;
+        inputValidStatus[3] = true;
+    }
+
+    if(!phoneRegex.test(form.phone.value)){
+        addErrMsg(form.phone);
+        inputValidStatus[4] = false;
+    } else {
+        phone = form.phone.value;
+        inputValidStatus[4] = true;
+    }
+
+    if(!(form.street_addr.value.trim().length > 0)){
+        addErrMsg(form.street_addr);
+        inputValidStatus[5] = false;
+    } else {
+        streetAddr = form.street_addr.value;
+        inputValidStatus[5] = true;
+    }
+
+    if(!digitRegex.test(form.postal_code.value)){
+        addErrMsg(form.postal_code);
+        inputValidStatus[6] = false;
+    } else {
+        postCode = form.postal_code.value;
+        inputValidStatus[6] = true;
+    }
+
+    if(!strRegex.test(form.city.value) || form.city.value.trim().length == 0){
+        addErrMsg(form.city);
+        inputValidStatus[7] = false;
+    } else {
+        city = form.city.value;
+        inputValidStatus[7] = true;
+    }
+    country = form.country.value;
+    labels = form.labels.value;
+    return inputValidStatus.includes(false) ? false : true;
+}
+
+
+function addErrMsg(inputBox){
+    inputBox.classList.add('errorMsg');
+}
